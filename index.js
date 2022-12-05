@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 dotenv.config();
 const port = 5000;
 import userRouter from "./routes/user.js";
+import blogRouter from "./routes/blog.js";
 
 app.use(express.json());
 app.use(cors());
@@ -15,6 +16,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/users", userRouter);
+app.use("/blog", blogRouter);
 
 mongoose
   .connect(process.env.DB)
