@@ -1,4 +1,5 @@
 import BlogModal from "../models/blog.js";
+import mongoose from "mongoose";
 
 export const createBlog = async (req, res) => {
   const blog = req.body;
@@ -28,6 +29,19 @@ export const particularBlog = async (req, res) => {
   try {
     const blog = await BlogModal.findById(id);
     res.status(200).json(blog);
+  } catch (err) {
+    res.status(404).json({ message: "something went wrong" });
+  }
+};
+
+export const getBlogByUser = async (req, res) => {
+  const { id } = req.params;
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(404).json({ message: "User doesn't exist " });
+    }
+    const userBlog = await BlogModal.find({ creator: id });
+    res.status(200).json(userBlog);
   } catch (err) {
     res.status(404).json({ message: "something went wrong" });
   }
