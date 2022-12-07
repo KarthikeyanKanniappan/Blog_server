@@ -46,3 +46,38 @@ export const getBlogByUser = async (req, res) => {
     res.status(404).json({ message: "something went wrong" });
   }
 };
+
+export const deleteBlog = async (req, res) => {
+  const { id } = req.params;
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(404).json({ message: `No Blog exist with id ${id} ` });
+    }
+    await BlogModal.findByIdAndRemove(id);
+    res.json({ message: "Blog deleted successfully" });
+  } catch (err) {
+    res.status(404).json({ message: "something went wrong" });
+  }
+};
+
+export const updateBlog = async (req, res) => {
+  const { id } = req.params;
+  const { title, description, creator, imageFile, tags } = req.body;
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(404).json({ message: `No Blog exist with id ${id} ` });
+    }
+    const updatedBlog = {
+      creator,
+      title,
+      description,
+      imageFile,
+      tags,
+      _id: id,
+    };
+    await BlogModal.findByIdAndUpdate(id, updatedBlog, { new: true });
+    res.json({ updatedBlog });
+  } catch (err) {
+    res.status(404).json({ message: "something went wrong" });
+  }
+};
